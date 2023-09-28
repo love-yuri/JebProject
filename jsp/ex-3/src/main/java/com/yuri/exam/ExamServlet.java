@@ -34,18 +34,10 @@ public class ExamServlet extends HttpServlet {
         addAns("question_4", "option_3");
     }
 
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 如果是重置就直接返回原界面
         if(request.getParameter("submit") == null) {
-            String file_path = getServletContext().getRealPath("exam.html"), html;
-            BufferedReader reader = new BufferedReader(new FileReader(file_path));
-            response.setContentType("text/html");
-            PrintWriter writer = response.getWriter();
-            while ((html = reader.readLine()) != null) {
-                writer.write(html);
-            }
-            reader.close();
+            response.sendRedirect("index.jsp");
         } else {
             int score = 0;
             // 获取分数并显示
@@ -61,9 +53,16 @@ public class ExamServlet extends HttpServlet {
         }
     }
 
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        doGet(request, response);
+    }
+
     // 获取分数，需要数据和答案完全匹配
     int getScore(String question, String[] ans) {
-        int res = 0;
+        if(ans == null) {
+            return 0;
+        }
         HashSet<String> set = this.ans.get(question);
         for(String s : ans) {
             if(!set.contains(s)) {

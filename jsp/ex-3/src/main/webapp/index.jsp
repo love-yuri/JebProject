@@ -1,9 +1,9 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="GBK" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>©╪йто╣мЁё╛фТ╤╞ё║</title>
+    <title>Х─┐Х╞∙ГЁ╩Г╩÷О╪▄Е░╞Е┼╗О╪│</title>
 </head>
 <body>
 <div>

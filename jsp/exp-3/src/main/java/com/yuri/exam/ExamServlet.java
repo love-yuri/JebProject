@@ -5,14 +5,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 @WebServlet("/examServlet")
 public class ExamServlet extends HttpServlet {
@@ -34,10 +32,11 @@ public class ExamServlet extends HttpServlet {
         addAns("question_4", "option_3");
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         // 如果是重置就直接返回原界面
         if(request.getParameter("submit") == null) {
-            response.sendRedirect("index.jsp");
+            request.getRequestDispatcher("/").forward(request, response);
+
         } else {
             int score = 0;
             // 获取分数并显示
@@ -51,11 +50,6 @@ public class ExamServlet extends HttpServlet {
             out.println("<h1>你的分数是 : " + score + "分</h1>");
             out.println("</body></html>");
         }
-    }
-
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        doGet(request, response);
     }
 
     // 获取分数，需要数据和答案完全匹配

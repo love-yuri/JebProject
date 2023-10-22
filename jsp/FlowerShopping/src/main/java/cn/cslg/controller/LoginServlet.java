@@ -39,6 +39,7 @@ public class LoginServlet extends HttpServlet {
                         response.sendRedirect("FlowerServlet");
                         return;
                     } else {
+                        System.out.println(u.getUpwd());
                         writer.write("<html><body><h1>密码错误</h1></body></html>");
                         return;
                     }

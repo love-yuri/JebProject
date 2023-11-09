@@ -1,0 +1,27 @@
+server:
+  port: 10010
+spring:
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/user?useSSL=false&allowPublicKeyRetrieval=true
+#    username: root
+#    password: yuri
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+    gateway:
+      routes:
+        - id: user-service # 路由id，自定义 只要唯一就行
+          uri: lb://userservice # 路由目标地址
+          predicates: # 断言判断是否符合要求
+            - Path=/user/**
+        - id: order-service # 路由id，自定义 只要唯一就行
+          uri: lb://orderservice # 路由目标地址
+          predicates: # 断言判断是否符合要求
+            - Path=/order/**
+  application:
+    name: gateway
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://127.0.0.1:8050/eureka

@@ -15,12 +15,6 @@ public class HelloServlet extends HttpServlet {
         resp.setHeader("Access-Control-Max-Age", "3600");
         resp.setHeader("Access-Control-Allow-Headers", "*");
         resp.setHeader("Access-Control-Allow-Credentials", "true");
-        for (Cookie cookie : request.getCookies()) {
-            String name = cookie.getName();
-            String value = cookie.getValue();
-            System.out.println("Cookie Name: " + name);
-            System.out.println("Cookie Value: " + value);
-        }
 
         try (ByteArrayOutputStream base = new ByteArrayOutputStream()) {
             javax.imageio.ImageIO.write(new CreateCode().createCode(request), "png", base);

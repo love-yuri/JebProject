@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuri.exp_9.mapper.BookMapper">
+    <sql id="table">books</sql>
+
+    <insert id="insert" parameterType="Book">
+        INSERT INTO
+        <include refid="table"/>
+        (ISBN, name, price)
+        VALUES (#{ISBN}, #{name}, #{price})
+    </insert>
+
+    <delete id="deleteById" parameterType="Integer">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE id = #{id}
+    </delete>
+
+    <select id="getBooks" resultType="Book">
+        SELECT * FROM
+        <include refid="table"/>
+    </select>
+
+    <select id="findById" resultType="Book" parameterType="Integer">
+        SELECT * FROM
+        <include refid="table"/>
+        WHERE id = #{id}
+    </select>
+
+    <!-- 更新用户信息 -->
+    <update id="updateBook" parameterType="Book">
+        UPDATE
+        <include refid="table"/>
+        SET ISBN = #{ISBN},
+            name = #{name},
+            price = #{price}
+        WHERE id = #{id}
+    </update>
+
+
+</mapper>

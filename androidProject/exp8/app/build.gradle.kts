@@ -38,11 +38,6 @@ android {
 }
 
 dependencies {
-
-    implementation(libs.androidx.junit.ktx)
-    implementation(libs.androidx.media3.test.utils)
-
-
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
     //noinspection KaptUsageInsteadOfKsp

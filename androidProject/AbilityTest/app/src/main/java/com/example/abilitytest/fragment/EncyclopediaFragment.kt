@@ -1,4 +1,4 @@
-package com.example.abilitytest.activity
+package com.example.abilitytest.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

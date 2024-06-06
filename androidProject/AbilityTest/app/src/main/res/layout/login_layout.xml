@@ -17,8 +17,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="vertical"
         tools:ignore="MissingConstraints">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:importantForAccessibility="no"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/avatar_tips"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:text="@string/upload_avatar"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:importantForAccessibility="no" />
+
+        </LinearLayout>
+        
+
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/username_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:counterEnabled="true"
@@ -38,6 +65,7 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:counterEnabled="true"
@@ -71,6 +99,16 @@
                 android:layout_marginTop="10dp"
                 style="?attr/materialButtonOutlinedStyle"
                 android:text="@string/login" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/go_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="10dp"
+                style="?attr/materialButtonOutlinedStyle"
+                android:text="@string/go_login" />
 
 
     </LinearLayout>

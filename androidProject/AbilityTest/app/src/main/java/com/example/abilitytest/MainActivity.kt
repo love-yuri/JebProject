@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import androidx.lifecycle.lifecycleScope
+import com.example.abilitytest.activity.LoginActivity
 import com.example.abilitytest.activity.MainMenuActivity
 import com.example.abilitytest.databinding.WelcomeBinding
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val start = {
-                this@MainActivity.startActivity(Intent(this@MainActivity, MainMenuActivity::class.java))
+                this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
                 this@MainActivity.finish()
             }
             val skipBtn = binding.skip .apply {

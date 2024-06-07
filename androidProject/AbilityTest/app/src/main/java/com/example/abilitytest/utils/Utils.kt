@@ -1,83 +1,87 @@
 package com.example.abilitytest.utils
 
-import android.content.ContentResolver
+import android.annotation.SuppressLint
 import android.content.Context
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.provider.MediaStore
+import android.os.Environment
 import android.provider.OpenableColumns
 import android.util.Log
+import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
+import com.example.abilitytest.dataroom.FILEPATH
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.net.URI
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 
+
 object Utils {
-    fun copyFile(file: File, path: String) {
-        val newFile = File(path).apply {
-            parentFile?.let {
-                if (!it.exists()) {
-                    it.mkdirs()
+    /**
+     * 将uri保存到指定路径，然后返回完整路径
+     * 默认文件名 路径/当前时间-原名称
+     * 需要传入callback 函数
+     */
+    fun copyFile(context: Context,  uri: Uri, path: String, callBack: (String?) -> Unit) {
+        Glide.with(context)
+            .asBitmap()
+            .load(uri)
+            .into(object : CustomTarget<Bitmap?>() {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap?>?
+                ) {
+                    val baseDir = "${context.getExternalFilesDir(null)}/$path"
+                    val directory = File(baseDir)
+
+                    if (!directory.exists()) {
+                        directory.mkdirs()
+                    }
+                    val file = File(directory, "${now()}-${getFileNameFromUri(context, uri)}")
+                    try {
+                        FileOutputStream(file).use { out ->
+                            resource.compress(Bitmap.CompressFormat.PNG, 100, out)
+                        }
+                        callBack(file.absolutePath)
+                    } catch (e: IOException) {
+                        MessageUtil(context).createErrorDialog("复制失败: ${e.message}")
+                        callBack(null)
+                    }
                 }
-            }
-            if (!exists()) {
-                createNewFile()
-            }
-        }
-        try {
-            file.inputStream().use { input ->
-                newFile.outputStream().use { output ->
-                    input.copyTo(output)
-                }
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Log.i("yuri", "复制文件错误: ${e.message}")
-        }
+                override fun onLoadCleared(placeholder: Drawable?) { }
+            })
     }
 
+    /**
+     * 根据uri返回文件名
+     * TODO: 没有做异常处理
+     */
+    @SuppressLint("Range")
+    fun getFileNameFromUri(context: Context, uri: Uri): String? {
+        var fileName: String? = null
+        val cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            if (it.moveToFirst()) {
+                fileName = it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+            }
+        }
+        return fileName
+    }
+
+    /**
+     * 返回当前时间
+     */
     fun now(): String {
         val calendar = Calendar.getInstance()
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         return formatter.format(calendar.time)
-    }
-
-    fun copyUriToLocalFile(context: Context, uri: Uri, destinationPath: String): Boolean {
-        val destinationFile = File(destinationPath).apply {
-            parentFile?.let {
-                if (!it.exists()) {
-                    it.mkdirs()
-                }
-            }
-            if (!exists()) {
-                createNewFile()
-            }
-        }
-
-        return try {
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                FileOutputStream(destinationFile).use { outputStream ->
-                    copyStream(inputStream, outputStream)
-                }
-            }
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
-    }
-
-    private fun copyStream(input: InputStream, output: OutputStream) {
-        val buffer = ByteArray(1024)
-        var bytesRead: Int
-        while (input.read(buffer).also { bytesRead = it } != -1) {
-            output.write(buffer, 0, bytesRead)
-        }
     }
 }

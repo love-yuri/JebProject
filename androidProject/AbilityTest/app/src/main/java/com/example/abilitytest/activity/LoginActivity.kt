@@ -4,11 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
+import com.bumptech.glide.Glide
 import com.example.abilitytest.R
 import com.example.abilitytest.databinding.LoginLayoutBinding
 import com.example.abilitytest.dataroom.FILEPATH
@@ -18,7 +20,6 @@ import com.example.abilitytest.utils.MessageUtil
 import com.example.abilitytest.utils.SharedPreferencesUtil
 import com.example.abilitytest.utils.USER_SP
 import com.example.abilitytest.utils.Utils
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -44,20 +45,21 @@ class LoginActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // 获取运行状态
-        runMode = intent.getStringExtra("mode")?.let(Mode::valueOf) ?: Mode.REGISTER
+        runMode = intent.getStringExtra("mode")?.let(Mode::valueOf) ?: Mode.LOGIN
 
         // 获取图片launcher
         val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 it.data?.data?.let { uri ->
-                    // 使用 URI 处理图片
-                    binding.avatarTips.visibility = TextView.GONE
-                    binding.avatar.visibility = ImageView.VISIBLE
-                    binding.avatar.setImageURI(uri)
-
-                    avatar = "${getExternalFilesDir(null)}/${FILEPATH.AVATAR_PATH}/${Utils.now()}.png"
-
-                    Utils.copyUriToLocalFile(this@LoginActivity, uri, avatar)
+                    Utils.copyFile(this, uri, FILEPATH.AVATAR) { path ->
+                        path?.also {
+                            avatar = path
+                            // 使用 URI 处理图片
+                            binding.avatarTips.visibility = TextView.GONE
+                            binding.avatar.visibility = ImageView.VISIBLE
+                            binding.avatar.setImageURI(uri)
+                        }
+                    }
                 }
             }
         }
@@ -72,11 +74,14 @@ class LoginActivity: AppCompatActivity() {
                     })
                 }
                 // 点击头像上传图片
+                binding.rememberPasswordCheckBox.visibility = CheckBox.GONE
                 binding.avatarTips.setOnClickListener { upload() }
                 binding.avatar.setOnClickListener { upload() }
             }
 
-            Mode.LOGIN -> {}
+            Mode.LOGIN -> {
+                binding.rememberPasswordCheckBox.visibility = CheckBox.VISIBLE
+            }
         }
 
         // 处理自动登录
@@ -103,7 +108,7 @@ class LoginActivity: AppCompatActivity() {
             var nextMode = Mode.LOGIN
             if (runMode == Mode.LOGIN) {
                 nextMode = Mode.REGISTER
-                binding.goLogin.text = getString(R.string.goRegiter)
+                binding.goLogin.text = getString(R.string.goRegister)
             }
             setOnClickListener {
                 startActivity(Intent(this@LoginActivity, LoginActivity::class.java).apply {
@@ -152,10 +157,13 @@ class LoginActivity: AppCompatActivity() {
                 finish()
             }
             if (binding.rememberPasswordCheckBox.isChecked) {
-                spUtil.set(SharedPreferencesUtil.Type.USER, USER_SP.CURRENT_USERNAME, it.username)
+                spUtil.set(SharedPreferencesUtil.Type.USER, USER_SP.AUTO_LOGIN_USERNAME, it.username)
+            } else {
+                spUtil.remove(SharedPreferencesUtil.Type.USER, USER_SP.AUTO_LOGIN_USERNAME)
             }
+            spUtil.set(SharedPreferencesUtil.Type.USER, USER_SP.CURRENT_USERNAME, it.username)
+            msgUtil.createToast(getString(R.string.login_success))
         }
-        msgUtil.createToast(getString(R.string.login_success))
     }
 
     /**
@@ -164,18 +172,14 @@ class LoginActivity: AppCompatActivity() {
     private fun register() {
         getUserInfo()?.let {
             service.dao.findByUserName(it.username)?.also {
-                binding.usernameLayout.error = getString(R.string.userIsExeits)
+                binding.usernameLayout.error = getString(R.string.userIsExist)
                 return
             }
 
             binding.usernameLayout.error = null
 
             service.dao.insert(it)
-            if (binding.rememberPasswordCheckBox.isChecked) {
-                spUtil.set(SharedPreferencesUtil.Type.USER, USER_SP.CURRENT_USERNAME, it.username)
-            } else {
-                spUtil.remove(SharedPreferencesUtil.Type.USER, USER_SP.CURRENT_USERNAME)
-            }
+
             Snackbar.make(binding.root, getString(R.string.register_success), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.goLogin)) {
                     startActivity(Intent(this, LoginActivity::class.java).apply {
@@ -192,8 +196,17 @@ class LoginActivity: AppCompatActivity() {
      * 自动登录
      */
     private fun autoLogin() {
+        // 处理头像自动显示
+        binding.username.addTextChangedListener {
+            service.dao.findByUserName(it.toString())?.apply {
+                this@LoginActivity.avatar = avatar
+                Glide.with(this@LoginActivity).load(avatar).into(binding.avatar)
+                binding.avatarTips.visibility = TextView.GONE
+                binding.avatar.visibility = ImageView.VISIBLE
+            }
+        }
         if (runMode == Mode.LOGIN) {
-            spUtil.get(SharedPreferencesUtil.Type.USER, USER_SP.CURRENT_USERNAME)?.also {
+            spUtil.get(SharedPreferencesUtil.Type.USER, USER_SP.AUTO_LOGIN_USERNAME)?.also {
                 service.dao.findByUserName(it)?.also { user ->
                     binding.avatarTips.visibility = TextView.GONE
                     binding.avatar.visibility = ImageView.VISIBLE

@@ -59,3 +59,9 @@ class UserService(
         db.close()
     }
 }
+
+object CurrentUser {
+    lateinit var username: String
+    lateinit var password: String
+    lateinit var avatar: String
+}

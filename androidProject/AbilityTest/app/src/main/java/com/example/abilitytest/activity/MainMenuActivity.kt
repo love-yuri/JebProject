@@ -1,19 +1,28 @@
 package com.example.abilitytest.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.abilitytest.R
 import com.example.abilitytest.databinding.ActivityMainBinding
+import com.example.abilitytest.dataroom.CurrentUser
+import com.example.abilitytest.dataroom.User
+import com.example.abilitytest.dataroom.UserService
 import com.example.abilitytest.fragment.EncyclopediaFragment
 import com.example.abilitytest.fragment.NoteFragment
 import com.example.abilitytest.fragment.QuestionsFragment
 import com.example.abilitytest.fragment.SettingsFragment
 import com.example.abilitytest.utils.MessageUtil
+import com.example.abilitytest.utils.SharedPreferencesUtil
+import com.example.abilitytest.utils.USER_SP
 
 class MainMenuActivity : AppCompatActivity() {
     private val msgUtil = MessageUtil(this)
     private lateinit var binding: ActivityMainBinding
+    private lateinit var spUtil: SharedPreferencesUtil
+    private lateinit var service: UserService
+
     private val fragmentMap = mapOf(
         R.id.questions to QuestionsFragment(),
         R.id.note to NoteFragment(),
@@ -24,6 +33,8 @@ class MainMenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        spUtil = SharedPreferencesUtil(this)
+        service = UserService(this)
 
         setContentView(binding.root)
         // 设置初始fragment
@@ -34,6 +45,25 @@ class MainMenuActivity : AppCompatActivity() {
             changeFragment(fragmentMap[it.itemId]!!)
             true
         }
+
+        // 初始化用户
+        initUser()
+    }
+
+    private fun initUser() {
+        val username = spUtil.get(SharedPreferencesUtil.Type.USER, USER_SP.CURRENT_USERNAME) ?: run {
+            TODO("当前没有登录用户")
+        }
+
+        service.dao.findByUserName(username)?.also {
+            CurrentUser.username = it.username
+            CurrentUser.avatar = it.avatar
+            CurrentUser.password = it.password
+        } ?: run {
+            spUtil.remove(SharedPreferencesUtil.Type.USER, USER_SP.CURRENT_USERNAME)
+            TODO("不存在的用户")
+        }
+
     }
 
     /**

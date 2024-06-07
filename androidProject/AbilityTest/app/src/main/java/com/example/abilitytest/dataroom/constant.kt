@@ -4,7 +4,8 @@ import android.content.Context
 
 object DBNAME {
     const val USER = "user.db"
+    const val NOTE = "note.db"
 }
 object FILEPATH {
-    const val AVATAR_PATH = "avatar"
+    const val AVATAR = "avatar"
 }

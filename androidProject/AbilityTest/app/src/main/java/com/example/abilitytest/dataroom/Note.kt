@@ -1,7 +1,6 @@
 package com.example.abilitytest.dataroom
 
 import android.content.Context
-import androidx.room.AutoMigration
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
@@ -15,45 +14,44 @@ import androidx.room.RoomDatabase
 import androidx.room.Update
 
 @Entity
-data class User(
-    @PrimaryKey val username: String,
-    @ColumnInfo(name = "password") val password: String,
-    @ColumnInfo(name = "avatar") val avatar: String,
+data class Note(
+    @PrimaryKey(autoGenerate = true) val id: Int?,
+    @ColumnInfo(name = "content") var content: String,
+    @ColumnInfo(name = "update") val update: String,
 )
 
 @Dao
-interface UserDao {
-    @Query("SELECT * FROM user")
-    fun getAll(): List<User>
+interface NoteDao {
+    @Query("SELECT * FROM note")
+    fun getAll(): List<Note>
 
-    @Query("select * from user where username = :username")
-    fun findByUserName(username: String): User?
+    @Query("select * from note where id = :id")
+    fun findById(id: Int): Note?
 
     @Insert
-    fun insert(user: User)
+    fun insert(note: Note)
 
     @Update
-    fun update(user: User)
+    fun update(note: Note)
 
     @Delete
-    fun delete(user: User)
+    fun delete(note: Note)
 }
 
-@Database(entities = [User::class], version = 2)
-abstract class UserDatabase : RoomDatabase() {
-    abstract fun dao(): UserDao
+@Database(entities = [Note::class], version = 2)
+abstract class NoteDatabase : RoomDatabase() {
+    abstract fun dao(): NoteDao
 }
 
-class UserService(
+class NoteService(
     context: Context
 ) : AutoCloseable {
     private val db = Room.databaseBuilder(
         context,
-        UserDatabase::class.java,
-        DBNAME.USER
+        NoteDatabase::class.java,
+        DBNAME.NOTE
     ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
     val dao = db.dao()
-
 
     override fun close() {
         db.close()

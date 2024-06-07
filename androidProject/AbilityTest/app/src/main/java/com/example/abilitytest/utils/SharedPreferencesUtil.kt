@@ -7,6 +7,7 @@ class SharedPreferencesUtil(
     private val context: Context
 ) {
     private val mutableMap = mutableMapOf<Type, SharedPreferences>()
+    private val msgUtil = MessageUtil(context)
     enum class Type {
         USER, // 和用户相关的信息
     }
@@ -42,7 +43,7 @@ class SharedPreferencesUtil(
         }
         mutableMap.getValue(type).edit().apply {
             putString(key.toString(), value)
-            apply()
+            commit()
         }
     }
 
@@ -56,12 +57,13 @@ class SharedPreferencesUtil(
         }
         mutableMap.getValue(type).edit().apply {
             remove(key.toString())
-            apply()
+            commit()
         }
     }
 }
 
 // user相关的内容
 enum class USER_SP {
-    CURRENT_USERNAME, // 当前登录用户名
+    AUTO_LOGIN_USERNAME, // 当前自动登录用户名
+    CURRENT_USERNAME, // 当前登录的用户名
 }

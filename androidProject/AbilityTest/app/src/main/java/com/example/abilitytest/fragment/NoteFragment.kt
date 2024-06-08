@@ -16,6 +16,7 @@ import com.example.abilitytest.R
 import com.example.abilitytest.activity.CreateNoteActivity
 import com.example.abilitytest.databinding.FragmentNoteBinding
 import com.example.abilitytest.databinding.NoteCardBinding
+import com.example.abilitytest.dataroom.CurrentUser
 import com.example.abilitytest.dataroom.Note
 import com.example.abilitytest.dataroom.NoteService
 import com.example.abilitytest.utils.MessageUtil
@@ -46,7 +47,7 @@ class NoteFragment: Fragment() {
     override fun onResume() {
         binding.recycler.apply {
             layoutManager = GridLayoutManager(activity, 1, GridLayoutManager.VERTICAL, false)
-            adapter = NoteAdapter(service.dao.getAll(), { note ->
+            adapter = NoteAdapter(service.dao.getAll(CurrentUser.username), { note ->
                 service.dao.delete(note)
                 msgUtil.createToast(getString(R.string.deleteSuccess))
                 this@NoteFragment.onResume()

@@ -8,4 +8,5 @@ object DBNAME {
 }
 object FILEPATH {
     const val AVATAR = "avatar"
+    const val QUESTION_JSON_FILE = "question.json"
 }

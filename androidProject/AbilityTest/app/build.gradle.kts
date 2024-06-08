@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.abilitytest"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -39,18 +39,23 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
 }
 
 dependencies {
 
-    val room_version = "2.6.1"
+    // fastjson2
+    implementation("com.alibaba.fastjson2:fastjson2-kotlin:2.0.51")
 
-
+    // glide
     implementation ("com.github.bumptech.glide:glide:4.11.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
+
+    // roundImageView
     implementation ("com.makeramen:roundedimageview:2.3.0")
 
-
+    // dataRoom
+    val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
@@ -61,6 +66,7 @@ dependencies {
     testImplementation("androidx.room:room-testing:$room_version")
     implementation("androidx.room:room-paging:$room_version")
 
+    // default
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

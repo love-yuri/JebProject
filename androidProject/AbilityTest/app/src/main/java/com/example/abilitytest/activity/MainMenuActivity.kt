@@ -1,5 +1,6 @@
 package com.example.abilitytest.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +45,13 @@ class MainMenuActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener {
             changeFragment(fragmentMap[it.itemId]!!)
             true
+        }
+
+        val settingsFragment = fragmentMap[R.id.settings] as SettingsFragment
+        settingsFragment.logOutListener = {
+            spUtil.remove(SharedPreferencesUtil.Type.USER, USER_SP.CURRENT_USERNAME)
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
 
         // 初始化用户

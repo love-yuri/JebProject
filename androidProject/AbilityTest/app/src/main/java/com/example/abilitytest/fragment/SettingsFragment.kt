@@ -1,6 +1,7 @@
 package com.example.abilitytest.fragment
 
 import android.R.attr.bitmap
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.abilitytest.R
+import com.example.abilitytest.activity.LoginActivity
 import com.example.abilitytest.databinding.FragmentSettingsBinding
 import com.example.abilitytest.dataroom.CurrentUser
 import com.example.abilitytest.dataroom.FILEPATH
@@ -35,17 +37,8 @@ class SettingsFragment : Fragment() {
     private lateinit var spUtil: SharedPreferencesUtil
     private lateinit var service: UserService
     private lateinit var msgUtil: MessageUtil
+    var logOutListener: (() -> Unit)? = null
 
-    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) {
-            Utils.copyFile(requireContext(), uri, FILEPATH.AVATAR) {
-                it?.also {
-                    Glide.with(requireContext()).load(uri).into(binding.avatar)
-                    CurrentUser.avatar = it
-                } ?: msgUtil.createErrorDialog(getString(R.string.saveError))
-            }
-        }
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,6 +47,17 @@ class SettingsFragment : Fragment() {
         service = UserService(requireContext())
         spUtil = SharedPreferencesUtil(requireContext())
         msgUtil = MessageUtil(requireContext())
+
+        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                Utils.copyFile(requireContext(), uri, FILEPATH.AVATAR) {
+                    it?.also {
+                        Glide.with(requireContext()).load(uri).into(binding.avatar)
+                        CurrentUser.avatar = it
+                    } ?: msgUtil.createErrorDialog(getString(R.string.saveError))
+                }
+            }
+        }
 
         binding.avatar.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -71,6 +75,12 @@ class SettingsFragment : Fragment() {
                 CurrentUser.avatar,
             ))
             msgUtil.createToast(getString(R.string.update_success))
+        }
+
+        binding.loginOut.setOnClickListener {
+            logOutListener?.also {
+                it()
+            }
         }
 
         binding.username.setText(CurrentUser.username)

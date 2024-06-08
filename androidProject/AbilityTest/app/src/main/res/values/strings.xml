@@ -33,4 +33,7 @@
     <string name="create_success">创建成功!</string>
     <string name="create">创建</string>
     <string name="saveError">保存失败!</string>
+    <string name="learning_progress">学习进度</string>
+    <string name="loginOut">退出登录</string>
+    <string name="readFileError">读取文件错误!!!</string>
 </resources>

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.abilitytest.R
 import com.example.abilitytest.databinding.EditNoteLayoutBinding
+import com.example.abilitytest.dataroom.CurrentUser
 import com.example.abilitytest.dataroom.Note
 import com.example.abilitytest.dataroom.NoteService
 import com.example.abilitytest.utils.MessageUtil
@@ -69,7 +70,7 @@ class CreateNoteActivity: AppCompatActivity() {
             msgUtil.createErrorDialog(getString(R.string.noteEmpty))
             return
         }
-        service.dao.insert(Note(null, text, Utils.now()))
+        service.dao.insert(Note(null, text, Utils.now(), CurrentUser.username))
         msgUtil.createToast(getString(R.string.create_success))
         finish()
     }

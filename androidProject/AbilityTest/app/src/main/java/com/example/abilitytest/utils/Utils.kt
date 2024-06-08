@@ -13,11 +13,14 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.abilitytest.R
 import com.example.abilitytest.dataroom.FILEPATH
+import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -83,5 +86,16 @@ object Utils {
         val calendar = Calendar.getInstance()
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         return formatter.format(calendar.time)
+    }
+
+    fun loadFileFromAssets(context: Context,  fileName: String): String? {
+        try {
+            val inputStream = context.assets.open(fileName)
+            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+            return bufferedReader.use { it.readText() }
+        } catch (e: Exception) {
+            MessageUtil(context).createErrorDialog("${context.getString(R.string.readFileError)}: ${e.message}")
+            return null
+        }
     }
 }

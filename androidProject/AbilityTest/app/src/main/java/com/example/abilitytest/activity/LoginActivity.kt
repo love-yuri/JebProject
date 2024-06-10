@@ -180,14 +180,12 @@ class LoginActivity: AppCompatActivity() {
 
             service.dao.insert(it)
 
-            Snackbar.make(binding.root, getString(R.string.register_success), Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.goLogin)) {
-                    startActivity(Intent(this, LoginActivity::class.java).apply {
-                        putExtra("mode", Mode.LOGIN.name)
-                    })
-                    finish()
-                }
-                .show()
+            Snackbar.make(binding.root, getString(R.string.register_success), Snackbar.LENGTH_LONG).setAction(getString(R.string.goLogin)) {
+                startActivity(Intent(this, LoginActivity::class.java).apply {
+                    putExtra("mode", Mode.LOGIN.name)
+                })
+                finish()
+            }.show()
         }
 
     }

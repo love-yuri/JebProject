@@ -33,18 +33,20 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-
         lifecycleScope.launch {
+            // 定义跳转函数
             val start = {
                 this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
                 this@MainActivity.finish()
             }
-            val skipBtn = binding.skip .apply {
+            // 如果点击了跳过，直接跳转
+            val skipBtn = binding.skip.apply {
                 setOnClickListener {
                     start()
                 }
             }
 
+            // 5s后跳转
             var defaultWaitTime = 6
             while (defaultWaitTime --> 0) {
                 withContext(Dispatchers.Main) {

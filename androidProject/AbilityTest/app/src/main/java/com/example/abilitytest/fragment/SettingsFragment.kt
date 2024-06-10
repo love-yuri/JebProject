@@ -1,12 +1,6 @@
 package com.example.abilitytest.fragment
 
-import android.R.attr.bitmap
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,22 +8,15 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.example.abilitytest.R
-import com.example.abilitytest.activity.LoginActivity
 import com.example.abilitytest.databinding.FragmentSettingsBinding
 import com.example.abilitytest.dataroom.CurrentUser
-import com.example.abilitytest.dataroom.FILEPATH
+import com.example.abilitytest.FILEPATH
 import com.example.abilitytest.dataroom.User
 import com.example.abilitytest.dataroom.UserService
 import com.example.abilitytest.utils.MessageUtil
 import com.example.abilitytest.utils.SharedPreferencesUtil
-import com.example.abilitytest.utils.USER_SP
 import com.example.abilitytest.utils.Utils
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 
 class SettingsFragment : Fragment() {

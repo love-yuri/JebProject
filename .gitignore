@@ -64,4 +64,5 @@ build/
 .externalNativeBuild
 .cxx
 local.properties
+**/*.mp4
 

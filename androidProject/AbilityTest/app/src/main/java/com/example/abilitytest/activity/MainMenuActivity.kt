@@ -79,6 +79,10 @@ class MainMenuActivity : AppCompatActivity() {
      */
     private fun changeFragment(next: Fragment, isInit: Boolean = false) {
         supportFragmentManager.beginTransaction().apply {
+            setCustomAnimations(
+                R.anim.slide_in_left,  // 进入动画
+                R.anim.slide_out_left,  // 退出动画
+            )
             if (isInit) {
                 add(R.id.frameLayout, next)
             } else {

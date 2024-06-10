@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("org.jetbrains.kotlin.plugin.serialization")
     kotlin("kapt")
 }
 
@@ -10,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.abilitytest"
-        minSdk = 26
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -44,8 +45,13 @@ android {
 
 dependencies {
 
-    // fastjson2
-    implementation("com.alibaba.fastjson2:fastjson2-kotlin:2.0.51")
+    // exoplayer
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-exoplayer-dash:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
+
+    // serialization-json
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
     // glide
     implementation ("com.github.bumptech.glide:glide:4.11.0")

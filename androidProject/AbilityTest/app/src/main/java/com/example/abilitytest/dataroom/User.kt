@@ -1,7 +1,6 @@
 package com.example.abilitytest.dataroom
 
 import android.content.Context
-import androidx.room.AutoMigration
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
@@ -13,6 +12,7 @@ import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.Update
+import com.example.abilitytest.DBNAME
 
 @Entity
 data class User(

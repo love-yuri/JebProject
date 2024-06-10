@@ -36,4 +36,9 @@
     <string name="learning_progress">学习进度</string>
     <string name="loginOut">退出登录</string>
     <string name="readFileError">读取文件错误!!!</string>
+    <string name="jsonDecodeError">JSON转换失败</string>
+    <string name="oumeideduo">恭喜你，做对啦!</string>
+    <string name="answerError">回答错误!</string>
+    <string name="accuracy">"正确率: "</string>
+    <string name="searchRubbishKnowledge">搜索垃圾知识</string>
 </resources>

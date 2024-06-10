@@ -15,7 +15,7 @@
         android:layout_height="200dp"
         app:riv_corner_radius="100dp"
         app:riv_border_width="2dp"
-        app:riv_border_color="#333333"
+        app:riv_border_color="#FFCCCC"
         android:layout_marginBottom="10dp"
         android:scaleType="centerCrop" />
 

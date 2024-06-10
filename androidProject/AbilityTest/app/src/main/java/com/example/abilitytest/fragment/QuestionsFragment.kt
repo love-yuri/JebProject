@@ -67,10 +67,12 @@ class QuestionsFragment : Fragment() {
                         msgUtil.createToast(getString(R.string.answerError))
                     }
 
+                    // 选择之后全部禁用
                     for (i in 0 until group.childCount) {
                         group.getChildAt(i).apply {
                             val box = this as MaterialRadioButton
                             isEnabled = false
+                            // 如果选错了，则将正确答案标红
                             if (box.text.toString() == answer && answer != userAnswer) {
                                 box.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark))
                             }
